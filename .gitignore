@@ -136,3 +136,6 @@ dmypy.json
 *.parquet
 *.csv
 *.json
+
+# speacial folder
+data/exp/
