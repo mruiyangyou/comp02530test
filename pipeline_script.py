@@ -21,9 +21,9 @@ def run_hhsearch(a3m_file):
     """
     Run HHSearch to produce the hhr file
     """
-    cmd = ['/home/dbuchan/Applications/hh-suite-3.3.0/build/bin/hhsearch',
-           '-i', a3m_file, '-cpu', '1', '-d', 
-           '/home/dbuchan/Data/hhdb/pdb70/pdb70']
+    cmd = ['/home/ec2-user/data/hhsuite/bin/hhsearch',
+           '-i', a3m_file, '-cpu', '4', '-d', 
+           '/home/ec2-user/data/pdb70/pdb70']
     print(f'STEP 3: RUNNING HHSEARCH: {" ".join(cmd)}')
     p = Popen(cmd, stdin=PIPE,stdout=PIPE, stderr=PIPE)
     out, err = p.communicate()
@@ -52,7 +52,7 @@ def run_s4pred(input_file, out_file):
     """
     Runs the s4pred secondary structure predictor to produce the horiz file
     """
-    cmd = ['/Users/marceloyou/Desktop/UCL-DSML/COMP0235/Coursework/venv/bin/python3', '/Users/marceloyou/Desktop/UCL-DSML/COMP0235/s4pred/run_model.py',
+    cmd = ['/usr/bin/python', '/home/ec2-user/data/s4pred/run_model.py',
            '-t', 'horiz', '-T', '8', input_file]
     print(f'STEP 1: RUNNING S4PRED: {" ".join(cmd)}')
     p = Popen(cmd, stdin=PIPE,stdout=PIPE, stderr=PIPE)

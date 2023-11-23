@@ -31,7 +31,7 @@ def write_fasta(records: List, number: int) -> None:
     """
     split_records: List[List[str]] = [records[i::number] for i in range(number)]
     for i, records in enumerate(split_records):
-        with open(f'data/exp/experiemnt_{i}.fasta', "w") as output_handle:
+        with open(f'data/exp/experiemnt_{i+1}.fasta', "w") as output_handle:
             SeqIO.write(records, output_handle, "fasta")
 
 
