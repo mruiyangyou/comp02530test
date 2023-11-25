@@ -139,3 +139,4 @@ dmypy.json
 
 # speacial folder
 data/exp/
+data/out/
