@@ -57,7 +57,6 @@ def run_s4pred(input_file, out_file):
     print(f'STEP 1: RUNNING S4PRED: {" ".join(cmd)}')
     p = Popen(cmd, stdin=PIPE,stdout=PIPE, stderr=PIPE)
     out, err = p.communicate()
-    print(out)
     with open(out_file, "w") as fh_out:
         fh_out.write(out.decode("utf-8"))
 

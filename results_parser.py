@@ -1,6 +1,7 @@
 from Bio import SearchIO
 import numpy as np
 from scipy.stats import gmean
+import os 
 
 best_hit = []
 best_score = 0
@@ -15,11 +16,16 @@ for result in SearchIO.parse('tmp.hhr', 'hhsuite3-text'):
         if hit.evalue < 1.e-5:
             good_hit_scores.append(hit.score)
 
-fhOut = open("hhr_parse.out", "w")
-fhOut.write("query_id,best_hit,best_evalue,best_score,score_mean,score_std,score_gmean\n")
 mean=format(np.mean(good_hit_scores), ".2f")
 std=format(np.std(good_hit_scores), ".2f")
 g_mean=format(gmean(good_hit_scores), ".2f")
 
-fhOut.write(f"{id},{best_hit[0]},{best_hit[1]},{best_hit[2]},{mean},{std},{g_mean}\n")
-fhOut.close()
+# fhOut.write(f"{id},{best_hit[0]},{best_hit[1]},{best_hit[2]},{mean},{std},{g_mean}\n")
+# fhOut.close()
+
+file_exists = os.path.exists("hhr_parse.out")
+
+with open("hhr_parse.out", "a" if file_exists else "w") as fhOut:
+    if not file_exists:
+        fhOut.write("query_id,best_hit,best_evalue,best_score,score_mean,score_std,score_gmean\n")
+    fhOut.write(f"{id},{best_hit[0]},{best_hit[1]},{best_hit[2]},{mean},{std},{g_mean}\n")
