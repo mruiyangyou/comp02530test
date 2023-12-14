@@ -17,12 +17,14 @@ def run_parser(hhr_file):
     out, err = p.communicate()
     print(out.decode("utf-8"))
 
-def run_hhsearch(a3m_file):
+def run_hhsearch(a3m_file, machine_rank):
     """
     Run HHSearch to produce the hhr file
     """
+    assert isinstance(machine_rank, str)
+    num_threads = '3' if machine_rank == '1' else '1'    
     cmd = ['/home/ec2-user/data/hhsuite/bin/hhsearch',
-           '-i', a3m_file, '-cpu', '4', '-d', 
+           '-i', a3m_file, '-cpu', num_threads, '-d', 
            '/home/ec2-user/data/pdb70/pdb70']
     print(f'STEP 3: RUNNING HHSEARCH: {" ".join(cmd)}')
     p = Popen(cmd, stdin=PIPE,stdout=PIPE, stderr=PIPE)
@@ -48,12 +50,15 @@ def read_horiz(tmp_file, horiz_file, a3m_file):
         fh_out.write(f">ss_pred\n{pred}\n>ss_conf\n{conf}\n")
         fh_out.write(contents)
 
-def run_s4pred(input_file, out_file):
+def run_s4pred(input_file, out_file, machine_rank):
     """
     Runs the s4pred secondary structure predictor to produce the horiz file
     """
+    assert isinstance(machine_rank, str)
+    num_threads = '3' if machine_rank == '1' else '1'    
+    
     cmd = ['/usr/bin/python', '/home/ec2-user/data/s4pred/run_model.py',
-           '-t', 'horiz', '-T', '8', input_file]
+           '-t', 'horiz', '-T', num_threads, input_file]
     print(f'STEP 1: RUNNING S4PRED: {" ".join(cmd)}')
     p = Popen(cmd, stdin=PIPE,stdout=PIPE, stderr=PIPE)
     out, err = p.communicate()
@@ -77,6 +82,7 @@ def read_input(file):
 if __name__ == "__main__":
     
     sequences = read_input(sys.argv[1])
+    machine_rank = sys.argv[2]
     tmp_file = "tmp.fas"
     horiz_file = "tmp.horiz"
     a3m_file = "tmp.a3m"
@@ -85,7 +91,7 @@ if __name__ == "__main__":
         with open(tmp_file, "w") as fh_out:
             fh_out.write(f">{k}\n")
             fh_out.write(f"{v}\n")
-        run_s4pred(tmp_file, horiz_file)
+        run_s4pred(tmp_file, horiz_file, machine_rank)
         read_horiz(tmp_file, horiz_file, a3m_file)
-        run_hhsearch(a3m_file)
+        run_hhsearch(a3m_file, machine_rank)
         run_parser(hhr_file)
