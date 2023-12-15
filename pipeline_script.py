@@ -1,6 +1,11 @@
 import sys
 from subprocess import Popen, PIPE
 from Bio import SeqIO
+from prometheus_client import start_http_server, Counter
+import time
+
+jobs_completed = Counter('processed_jobs', 'Total processed jobs')
+
 
 """
 usage: python pipeline_script.py INPUT.fasta  
@@ -81,6 +86,7 @@ def read_input(file):
 
 if __name__ == "__main__":
     
+    start_http_server(4506)
     sequences = read_input(sys.argv[1])
     machine_rank = sys.argv[2]
     tmp_file = "tmp.fas"
@@ -95,3 +101,4 @@ if __name__ == "__main__":
         read_horiz(tmp_file, horiz_file, a3m_file)
         run_hhsearch(a3m_file, machine_rank)
         run_parser(hhr_file)
+        jobs_completed.inc()
