@@ -8,9 +8,12 @@ def combine_results(path: str, out_path: str) -> None:
     res: List[pd.DataFrame] = []
     for f in files:
         file_path: str = os.path.join(path, f)
-        res.append(pd.read_csv(file_path))
+        df = pd.read_csv(file_path)
+        df.dropna(subset=['best_hit', 'score_std', 'score_gmean'], inplace=True)
+        res.append(df)
         
-    res_df = pd.concat(res)
+    res_df = pd.concat(res).reset_index()
+    
     
     hist_df: pd.DataFrame = res_df[['query_id', 'best_hit']]
     hist_df.rename(columns={'query_id': 'fasta_id', 'best_hit': 'best_hit_id'}, 
