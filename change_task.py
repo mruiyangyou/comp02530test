@@ -1,5 +1,4 @@
 import pandas as pd 
-from pipeline_script import read_input
 import sys
 from Bio import SeqIO
 from typing import List
@@ -21,6 +20,10 @@ if __name__ == '__main__':
     processed_task = pd.read_csv('hhr_parse.out')
 
     print(f'Process_task: {len(processed_task)}')
+    
+    result =([w.id for w in work] == processed_task['query_id'].to_list())
+    print(f'Matched id with fasta file: {result}')
+    
     
     if int(sys.argv[1]) == 1:
         new_work = work[len(processed_task):]
